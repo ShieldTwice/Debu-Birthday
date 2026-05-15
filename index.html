@@ -1,1 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>For Debu ❤️</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#ff3d2e;
+    overflow-x:hidden;
+    color:white;
+}
+
+/* ================= LOGIN SCREEN ================= */
+
+.screen{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    display:flex;
+    gap:60px;
+    align-items:center;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+/* POLAROID */
+
+.polaroid{
+    width:280px;
+    background:white;
+    padding:15px 15px 70px;
+    border-radius:6px;
+    transform:rotate(-3deg);
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    position:relative;
+}
+
+.polaroid img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+}
+
+.bow{
+    position:absolute;
+    top:-20px;
+    right:-25px;
+    font-size:60px;
+}
+
+.teddy{
+    position:absolute;
+    bottom:-50px;
+    left:-50px;
+    font-size:80px;
+}
+
+/* PASSCODE */
+
+.pass-box h1{
+    font-family:'Baloo 2',cursive;
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.code-display{
+    display:flex;
+    gap:10px;
+    margin-bottom:25px;
+}
+
+.code-display div{
+    width:55px;
+    height:55px;
+    border:4px solid white;
+    border-radius:12px;
+    background:white;
+}
+
+.keypad{
+    display:grid;
+    grid-template-columns:repeat(3,80px);
+    gap:15px;
+}
+
+.key{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    border:none;
+    font-size:30px;
+    font-weight:bold;
+    cursor:pointer;
+    background:white;
+    color:#ff3d2e;
+    transition:0.2s;
+}
+
+.key:hover{
+    transform:scale(1.08);
+}
+
+.hint{
+    margin-top:20px;
+    font-size:16px;
+    opacity:0.9;
+}
+
+/* ================= MEMORY SCREEN ================= */
+
+.memory-screen{
+    display:none;
+    min-height:100vh;
+    padding:60px 20px;
+    background:linear-gradient(180deg,#ff4f5e,#ff7b8c);
+}
+
+.memory-container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.title{
+    text-align:center;
+    font-size:60px;
+    font-family:'Baloo 2',cursive;
+    margin-bottom:20px;
+}
+
+.letter{
+    background:rgba(255,255,255,0.15);
+    padding:30px;
+    border-radius:30px;
+    backdrop-filter:blur(10px);
+    line-height:1.9;
+    font-size:18px;
+    margin-bottom:40px;
+}
+
+/* GALLERY */
+
+.gallery-title{
+    font-size:35px;
+    margin-bottom:20px;
+    font-family:'Baloo 2',cursive;
+}
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.memory-card{
+    background:white;
+    padding:10px;
+    border-radius:20px;
+    transform:rotate(-2deg);
+    transition:0.3s;
+}
+
+.memory-card:hover{
+    transform:scale(1.03);
+}
+
+.memory-card img,
+.memory-card video{
+    width:100%;
+    border-radius:15px;
+}
+
+/* FLOATING HEARTS */
+
+.heart{
+    position:fixed;
+    bottom:-20px;
+    font-size:20px;
+    animation:float 8s linear infinite;
+    opacity:0.7;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0);
+        opacity:0;
+    }
+    20%{
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-120vh);
+        opacity:0;
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .container{
+        flex-direction:column;
+        gap:40px;
+    }
+
+    .title{
+        font-size:42px;
+    }
+
+    .letter{
+        font-size:16px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- ================= LOGIN SCREEN ================= -->
+
+<section class="screen" id="loginScreen">
+
+    <div class="container">
+
+        <!-- LEFT IMAGE -->
+
+        <div class="polaroid">
+
+            <!-- YOUR IMAGE -->
+            <img src="YOUR_IMAGE.jpg" alt="photo">
+
+            <div class="bow">🎀</div>
+            <div class="teddy">🧸</div>
+
+        </div>
+
+        <!-- RIGHT PASSCODE -->
+
+        <div class="pass-box">
+
+            <h1>Enter Passcode</h1>
+
+            <div class="code-display">
+                <div id="b1"></div>
+                <div id="b2"></div>
+                <div id="b3"></div>
+                <div id="b4"></div>
+            </div>
+
+            <div class="keypad">
+
+                <button class="key" onclick="press(1)">1</button>
+                <button class="key" onclick="press(2)">2</button>
+                <button class="key" onclick="press(3)">3</button>
+                <button class="key" onclick="press(4)">4</button>
+                <button class="key" onclick="press(5)">5</button>
+                <button class="key" onclick="press(6)">6</button>
+                <button class="key" onclick="press(7)">7</button>
+                <button class="key" onclick="press(8)">8</button>
+                <button class="key" onclick="press(9)">9</button>
+                <button class="key" onclick="clearCode()">*</button>
+                <button class="key" onclick="press(0)">0</button>
+                <button class="key" onclick="checkCode()">#</button>
+
+            </div>
+
+            <div class="hint">
+                hint - our fav code 👀
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= MEMORY SCREEN ================= -->
+
+<section class="memory-screen" id="memoryScreen">
+
+    <div class="memory-container">
+
+        <h1 class="title">Happy Birthday Debu 🎂</h1>
+
+        <!-- MUSIC -->
+        <audio autoplay loop controls style="margin-bottom:30px;width:100%;">
+            <source src="tera-yaar-hoon-main.mp3" type="audio/mp3">
+        </audio>
+
+        <!-- LETTER -->
+
+        <div class="letter">
+
+            Sakshya… ya phir hamara legendary Debu 😭💙
+            <br><br>
+
+            Bachpan se lekar ab tak jitne bhi kaand, masti,
+            random fights, hasi aur pagalpan hue hain…
+            un sab mein tu hamesha mere saath raha hai.
+
+            <br><br>
+
+            Kabhi bina wajah haste rahe,
+            kabhi stupid plans bana kar fas gaye,
+            aur kabhi bas purani baatein yaad karke hi pura din nikal gaya ✨
+
+            <br><br>
+
+            Life kitni bhi change ho jaaye,
+            kuch log permanent hote hain…
+            aur tu unme se ek hai.
+
+            <br><br>
+
+            Tu cousin kam aur bhai zyada hai ❤️
+
+            <br><br>
+
+            Ye website bas ek small reminder hai
+            ki hamari memories kitni special hain.
+
+            <br><br>
+
+            Aur haan…
+            abhi aur bhi kaand baki hain 😌
+
+            <br><br>
+
+            Happy Birthday Mere Bhai 🎉
+
+        </div>
+
+        <!-- GALLERY -->
+
+        <h2 class="gallery-title">Our Memories 📸</h2>
+
+        <div class="gallery">
+
+            <!-- PHOTO -->
+            <div class="memory-card">
+                <img src="photo1.jpg">
+            </div>
+
+            <div class="memory-card">
+                <img src="photo2.jpg">
+            </div>
+
+            <div class="memory-card">
+                <img src="photo3.jpg">
+            </div>
+
+            <!-- VIDEO -->
+            <div class="memory-card">
+                <video controls>
+                    <source src="video1.mp4" type="video/mp4">
+                </video>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FLOATING HEARTS -->
+
+<div class="heart" style="left:10%;">❤️</div>
+<div class="heart" style="left:30%;animation-delay:2s;">✨</div>
+<div class="heart" style="left:50%;animation-delay:4s;">🩷</div>
+<div class="heart" style="left:70%;animation-delay:1s;">🎂</div>
+<div class="heart" style="left:90%;animation-delay:3s;">💫</div>
+
+<script>
+
+let code = "";
+const correctCode = "0405";
+
+function press(num){
+
+    if(code.length < 4){
+
+        code += num;
+
+        document.getElementById("b" + code.length).style.background = "#ffb3bd";
+    }
+
+}
+
+function clearCode(){
+
+    code = "";
+
+    for(let i=1;i<=4;i++){
+        document.getElementById("b"+i).style.background = "white";
+    }
+
+}
+
+function checkCode(){
+
+    if(code === correctCode){
+
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("memoryScreen").style.display = "block";
+
+    }else{
+
+        alert("Wrong Passcode 😭");
+        clearCode();
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
