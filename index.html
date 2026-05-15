@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Debu! 🎉</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --coral: #FF6B6B;
+    --orange: #FF8E53;
+    --yellow: #FFD93D;
+    --pink: #FF6B9D;
+    --purple: #C77DFF;
+    --blue: #48CAE4;
+    --white: #FFFFFF;
+    --dark: #2D1B69;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 30%, #FFD93D 60%, #FF6B9D 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Floating confetti */
+  .confetti-container {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .confetti {
+    position: absolute;
+    width: 10px; height: 10px;
+    opacity: 0.7;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0.7; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* PASSCODE SCREEN */
+  #passcode-screen {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10;
+    background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 35%, #FFD93D 65%, #FF6B9D 100%);
+    transition: all 0.8s ease;
+  }
+
+  .lock-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 32px;
+    padding: 36px 32px;
+    width: 340px;
+    text-align: center;
+    box-shadow: 0 30px 80px rgba(45,27,105,0.25), 0 0 0 3px rgba(255,255,255,0.5);
+    position: relative;
+    animation: cardPop 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes cardPop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .teddy {
+    font-size: 52px;
+    display: block;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-12px) rotate(5deg); }
+  }
+
+  .lock-title {
+    font-family: 'Pacifico', cursive;
+    font-size: 22px;
+    color: var(--dark);
+    margin: 10px 0 6px;
+  }
+  .lock-subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  /* Code boxes */
+  .code-display {
+    display: flex; gap: 10px; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .code-box {
+    width: 52px; height: 52px;
+    border: 3px solid #E0E0E0;
+    border-radius: 14px;
+    font-family: 'Pacifico', cursive;
+    font-size: 24px;
+    color: var(--coral);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    background: #FFF5F5;
+  }
+  .code-box.filled {
+    border-color: var(--coral);
+    background: linear-gradient(135deg, #FF6B6B20, #FFD93D20);
+    transform: scale(1.08);
+  }
+  .code-box.wrong {
+    border-color: #FF0000;
+    background: #FF000010;
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+  }
+  .code-box.correct {
+    border-color: #4CAF50;
+    background: #4CAF5020;
+    animation: pop 0.3s ease;
+  }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  /* Keypad */
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .key {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 4px 12px rgba(255,107,107,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .key:active, .key.pressed {
+    transform: scale(0.92);
+    box-shadow: 0 2px 6px rgba(255,107,107,0.3);
+  }
+  .key.zero { grid-column: 2; }
+  .key.clear {
+    background: linear-gradient(135deg, #C77DFF, #9B59B6);
+    box-shadow: 0 4px 12px rgba(199,125,255,0.4);
+    font-size: 18px;
+  }
+  .key.back {
+    background: linear-gradient(135deg, #48CAE4, #0096C7);
+    box-shadow: 0 4px 12px rgba(72,202,228,0.4);
+    font-size: 18px;
+  }
+
+  .hint-text {
+    font-size: 12px;
+    color: #aaa;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .error-msg {
+    color: #FF6B6B;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .error-msg.show { opacity: 1; }
+
+  /* MEMORY SCREEN */
+  #memory-screen {
+    position: fixed; inset: 0;
+    overflow-y: auto;
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
+  }
+  #memory-screen.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Fireworks */
+  .firework {
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* Hero section */
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+  }
+  .birthday-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(36px, 8vw, 72px);
+    background: linear-gradient(90deg, #FFD93D, #FF6B9D, #C77DFF, #48CAE4, #FFD93D);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 0% }
+    100% { background-position: 300% }
+  }
+  .hero-emoji {
+    font-size: 50px;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.1); }
+  }
+  .hero-sub {
+    color: rgba(255,255,255,0.8);
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Memories grid */
+  .memories-section {
+    padding: 0 20px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-family: 'Pacifico', cursive;
+    color: #FFD93D;
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 0 0 20px rgba(255,217,61,0.5);
+  }
+
+  /* Polaroid cards */
+  .memories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 50px;
+  }
+  .polaroid {
+    background: white;
+    padding: 16px 16px 50px;
+    border-radius: 4px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.1);
+    transform: rotate(var(--rot));
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    cursor: pointer;
+    animation: slideIn 0.6s ease backwards;
+    position: relative;
+  }
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.08) translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    z-index: 2;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: rotate(var(--rot)) translateY(40px); }
+    to { opacity: 1; transform: rotate(var(--rot)); }
+  }
+  .polaroid-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .polaroid-img img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .polaroid-caption {
+    position: absolute;
+    bottom: 10px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'Pacifico', cursive;
+    font-size: 13px;
+    color: #555;
+    padding: 0 10px;
+  }
+
+  /* Message card */
+  .message-card {
+    background: linear-gradient(135deg, rgba(255,107,107,0.15), rgba(199,125,255,0.15));
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 24px;
+    padding: 36px;
+    margin: 30px 0;
+    position: relative;
+    backdrop-filter: blur(10px);
+    text-align: center;
+  }
+  .message-card::before {
+    content: '💌';
+    position: absolute;
+    top: -22px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 44px;
+  }
+  .message-text {
+    color: white;
+    font-size: 17px;
+    line-height: 1.8;
+    font-weight: 600;
+  }
+  .message-text span {
+    font-family: 'Pacifico', cursive;
+    font-size: 22px;
+    background: linear-gradient(90deg, #FFD93D, #FF6B9D);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block;
+    margin: 12px 0;
+  }
+
+  /* Wishes section */
+  .wishes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 30px;
+  }
+  .wish-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 24px 16px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+    animation: slideIn 0.6s ease backwards;
+  }
+  .wish-card:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  }
+  .wish-emoji { font-size: 40px; display: block; margin-bottom: 10px; }
+  .wish-text {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  /* Balloon decoration */
+  .balloons {
+    position: fixed; bottom: -20px; left: 0; right: 0;
+    pointer-events: none; z-index: 1;
+    display: flex; justify-content: space-around;
+  }
+  .balloon {
+    font-size: 40px;
+    animation: riseUp linear infinite;
+    opacity: 0.6;
+  }
+  @keyframes riseUp {
+    0% { transform: translateY(0) rotate(-5deg); opacity: 0.6; }
+    100% { transform: translateY(-110vh) rotate(5deg); opacity: 0; }
+  }
+
+  /* Add photo placeholder */
+  .add-photo-note {
+    background: rgba(255,217,61,0.15);
+    border: 2px dashed #FFD93D;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    color: #FFD93D;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+  
+  /* ===== MUSIC PLAYER ===== */
+.music-player {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 999;
+  display: none;
+}
+.music-player.show { display: block; }
+
+.player-bubble {
+  background: rgba(20, 10, 50, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 28px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 12px 50px rgba(0,0,0,0.5);
+  min-width: 240px;
+  animation: playerSlide 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes playerSlide {
+  from { transform: translateY(80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.disc {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: conic-gradient(#C77DFF, #FF6B9D, #FFD93D, #FF6B6B, #48CAE4, #C77DFF);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 18px rgba(199,125,255,0.6);
+  position: relative;
+}
+.disc::after {
+  content: '';
+  width: 14px; height: 14px;
+  background: #1a1a2e;
+  border-radius: 50%;
+  position: absolute;
+}
+.disc.spinning { animation: spin 3s linear infinite; }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.song-info { flex: 1; }
+.song-name { color: white; font-weight: 800; font-size: 13px; }
+.song-artist { color: rgba(255,255,255,0.5); font-size: 11px; margin-top: 2px; }
+.progress-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  margin-top: 8px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C77DFF, #FF6B9D);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 1s linear;
+}
+.play-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C77DFF, #FF6B9D);
+  border: none;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(199,125,255,0.5);
+  transition: all 0.2s;
+}
+.play-btn:hover { transform: scale(1.1); }
+</style>
+</head>
+<body>
+
+<!-- Confetti -->
+<div class="confetti-container" id="confetti"></div>
+
+<!-- PASSCODE SCREEN -->
+<div id="passcode-screen">
+  <div class="lock-card">
+    <span class="teddy">🧸</span>
+    <h2 class="lock-title">Secret Birthday Vault!</h2>
+    <p class="lock-subtitle">Sirf tumhare liye kuch khaas hai andar ✨</p>
+
+    <div class="code-display">
+      <div class="code-box" id="b0"></div>
+      <div class="code-box" id="b1"></div>
+      <div class="code-box" id="b2"></div>
+      <div class="code-box" id="b3"></div>
+    </div>
+
+    <div class="keypad">
+      <button class="key" onclick="pressKey('1')">1</button>
+      <button class="key" onclick="pressKey('2')">2</button>
+      <button class="key" onclick="pressKey('3')">3</button>
+      <button class="key" onclick="pressKey('4')">4</button>
+      <button class="key" onclick="pressKey('5')">5</button>
+      <button class="key" onclick="pressKey('6')">6</button>
+      <button class="key" onclick="pressKey('7')">7</button>
+      <button class="key" onclick="pressKey('8')">8</button>
+      <button class="key" onclick="pressKey('9')">9</button>
+      <button class="key clear" onclick="clearCode()">✕</button>
+      <button class="key zero" onclick="pressKey('0')">0</button>
+      <button class="key back" onclick="backspace()">⌫</button>
+    </div>
+
+    <p class="hint-text">hint - its are fav code 😉</p>
+    <p class="error-msg" id="error-msg">Galat passcode! Try karo phir 🙈</p>
+  </div>
+</div>
+
+<!-- MEMORY SCREEN -->
+<div id="memory-screen">
+  <div class="hero">
+    <span class="hero-emoji">🎂🎉🎊</span>
+    <h1 class="birthday-title">Happy Birthday<br>Sakshya!</h1>
+    <p class="hero-sub">Debu ke liye bahut pyaar 💖</p>
+  </div>
+
+  <div class="memories-section">
+    <!-- Message -->
+    <div class="message-card">
+      <p class="message-text">
+        Aaj ka din sirf tumhara hai, Debu! 🎉<br><br>
+        <span>Yeh rahe humari sabse khaas yaadein...</span>
+        Har ek pal jo humne saath bitaya, woh zindagi ke sabse sunhare moments hain.
+        Tumhara yeh khilkhilata chehra, tumhari pagalpan, aur tumhara pyaar —
+        sab kuch bahut miss kiya jaata hai jab tum saath nahi hote!
+        <span>Jio Hazaron Saal! 🥳</span>
+      </p>
+    </div>
+
+    <!-- Memories Grid -->
+    <h2 class="section-title">📸 Humari Yaadein</h2>
+    <div class="memories-grid" id="memories-grid">
+      <!-- Cards rendered by JS -->
+    </div>
+
+    <!-- Wishes -->
+    <h2 class="section-title">🌟 Birthday Wishes</h2>
+    <div class="wishes-grid">
+      <div class="wish-card" style="animation-delay:0.1s">
+        <span class="wish-emoji">🎯</span>
+        <p class="wish-text">Har sapna poora ho tumhara!</p>
+      </div>
+      <div class="wish-card" style="animation-delay:0.2s">
+        <span class="wish-emoji">🌈</span>
+        <p class="wish-text">Zindagi mein sirf khushiyan aayein!</p>
+      </div>
+      <div class="wish-card" style="animation-delay:0.3s">
+        <span class="wish-emoji">💪</span>
+        <p class="wish-text">Hamesha strong rehna Debu!</p>
+      </div>
+      <div class="wish-card" style="animation-delay:0.4s">
+        <span class="wish-emoji">🍰</span>
+        <p class="wish-text">Cake jitni meethi ho zindagi!</p>
+      </div>
+      <div class="wish-card" style="animation-delay:0.5s">
+        <span class="wish-emoji">✈️</span>
+        <p class="wish-text">Naye adventures ka intezaar hai!</p>
+      </div>
+      <div class="wish-card" style="animation-delay:0.6s">
+        <span class="wish-emoji">💖</span>
+        <p class="wish-text">Humara pyaar hamesha tumhare saath!</p>
+      </div>
+    </div>
+
+    <!-- Add photos note -->
+    <div class="add-photo-note">
+      📷 Is section mein apni photos add karo! Niche instructions padhein file mein.
+    </div>
+  </div>
+
+  <!-- Floating balloons -->
+  <div class="balloons" id="balloons"></div>
+</div>
+
+<script>
+  // ======= PASSCODE CONFIG =======
+  // YAHAN APNA PASSCODE CHANGE KARO!
+  const SECRET_CODE = "0405"; // ← Isko badlo apne passcode se
+  // ================================
+
+  let entered = "";
+
+  // Memories data — yahan apni photos/emojis add karo!
+  const memories = [
+    { emoji: "🎭", caption: "Our First Photo" },
+    { emoji: "🍕", caption: "Clinic Pe Holi" },
+    { emoji: "😂", caption: "Haste haste pagal ho gaye" },
+    { emoji: "🌅", caption: "Woh sunset wala din" },
+    { emoji: "🎮", caption: "Gaming session forever" },
+    { emoji: "🎤", caption: "Chess champion!" },
+  ];
+
+  // Render memories
+  const grid = document.getElementById('memories-grid');
+  memories.forEach((m, i) => {
+    const rotations = [-3, 2, -2, 3, -1, 2, -3, 1];
+    const rot = rotations[i % rotations.length];
+    const card = document.createElement('div');
+    card.className = 'polaroid';
+    card.style.setProperty('--rot', `${rot}deg`);
+    card.style.animationDelay = `${i * 0.1}s`;
+    card.innerHTML = `
+      <div class="polaroid-img">${m.emoji}</div>
+      <div class="polaroid-caption">${m.caption}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Generate confetti
+  const confettiContainer = document.getElementById('confetti');
+  const colors = ['#FF6B6B','#FFD93D','#C77DFF','#48CAE4','#FF6B9D','#FF8E53'];
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      background: ${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius: ${Math.random()>0.5?'50%':'3px'};
+      animation-duration: ${3+Math.random()*4}s;
+      animation-delay: ${-Math.random()*4}s;
+      width: ${6+Math.random()*10}px;
+      height: ${6+Math.random()*10}px;
+    `;
+    confettiContainer.appendChild(c);
+  }
+
+  // Balloons
+  const balloonsEl = document.getElementById('balloons');
+  const balloonEmojis = ['🎈','🎈','🎉','🎊','🎈','🎉','🎈','🎊'];
+  balloonEmojis.forEach((b, i) => {
+    const el = document.createElement('div');
+    el.className = 'balloon';
+    el.textContent = b;
+    el.style.animationDuration = `${8+Math.random()*6}s`;
+    el.style.animationDelay = `${-Math.random()*8}s`;
+    balloonsEl.appendChild(el);
+  });
+
+  // ======= PASSCODE LOGIC =======
+  function pressKey(digit) {
+    if (entered.length >= 4) return;
+    entered += digit;
+    updateDisplay();
+    if (entered.length === 4) {
+      setTimeout(checkCode, 300);
+    }
+  }
+
+  function backspace() {
+    if (entered.length > 0) {
+      entered = entered.slice(0, -1);
+      updateDisplay();
+    }
+  }
+
+  function clearCode() {
+    entered = "";
+    updateDisplay();
+    document.getElementById('error-msg').classList.remove('show');
+    for (let i = 0; i < 4; i++) {
+      document.getElementById('b' + i).classList.remove('wrong', 'correct', 'filled');
+    }
+  }
+
+  function updateDisplay() {
+    for (let i = 0; i < 4; i++) {
+      const box = document.getElementById('b' + i);
+      if (i < entered.length) {
+        box.textContent = '●';
+        box.classList.add('filled');
+        box.classList.remove('wrong', 'correct');
+      } else {
+        box.textContent = '';
+        box.classList.remove('filled', 'wrong', 'correct');
+      }
+    }
+  }
+
+  function checkCode() {
+    if (entered === SECRET_CODE) {
+      // Correct!
+      for (let i = 0; i < 4; i++) {
+        const box = document.getElementById('b' + i);
+        box.classList.add('correct');
+        box.classList.remove('filled');
+        box.textContent = '✓';
+      }
+      setTimeout(unlockMemories, 700);
+    } else {
+      // Wrong
+      for (let i = 0; i < 4; i++) {
+        document.getElementById('b' + i).classList.add('wrong');
+      }
+      document.getElementById('error-msg').classList.add('show');
+      setTimeout(() => {
+        clearCode();
+      }, 1200);
+    }
+  }
+
+  function unlockMemories() {
+    const screen = document.getElementById('passcode-screen');
+    screen.style.transform = 'scale(1.1)';
+    screen.style.opacity = '0';
+    setTimeout(() => {
+      screen.style.display = 'none';
+      document.getElementById('memory-screen').classList.add('visible');
+      launchFireworks();
+    }, 600);
+  }
+
+  // Simple firework effect
+  function launchFireworks() {
+    let count = 0;
+    const interval = setInterval(() => {
+      createFirework();
+      count++;
+      if (count > 20) clearInterval(interval);
+    }, 200);
+  }
+
+  function createFirework() {
+    const emojis = ['🎆','🎇','✨','🌟','💥','🎊','🎉'];
+    const el = document.createElement('div');
+    el.className = 'firework';
+    el.style.cssText = `
+      left: ${10 + Math.random()*80}%;
+      top: ${10 + Math.random()*60}%;
+      font-size: ${30 + Math.random()*30}px;
+      transition: all 1.5s ease;
+      opacity: 1;
+    `;
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    document.body.appendChild(el);
+    setTimeout(() => {
+      el.style.transform = `translate(${(Math.random()-0.5)*100}px, ${(Math.random()-0.5)*100}px) scale(0)`;
+      el.style.opacity = '0';
+    }, 50);
+    setTimeout(() => el.remove(), 1600);
+  }
+
+  // Keyboard support
+  document.addEventListener('keydown', e => {
+    if (e.key >= '0' && e.key <= '9') pressKey(e.key);
+    if (e.key === 'Backspace') backspace();
+    if (e.key === 'Escape') clearCode();
+  });
+</script>
+</body>
+</html>
